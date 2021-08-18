@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6DA66F4926CB4DF200805335 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DA66F4826CB4DF200805335 /* Utils.swift */; };
+		6DAFF24426C7F9D900E3B6CA /* PointCloudMetalView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DAFF24326C7F9D900E3B6CA /* PointCloudMetalView.swift */; };
 		6DC55D0926C130D0009FA6D6 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC55D0826C130D0009FA6D6 /* AppDelegate.swift */; };
 		6DC55D0B26C130D0009FA6D6 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC55D0A26C130D0009FA6D6 /* SceneDelegate.swift */; };
 		6DC55D0D26C130D0009FA6D6 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC55D0C26C130D0009FA6D6 /* ViewController.swift */; };
@@ -35,6 +37,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6DA66F4826CB4DF200805335 /* Utils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
+		6DAFF24326C7F9D900E3B6CA /* PointCloudMetalView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PointCloudMetalView.swift; sourceTree = "<group>"; };
 		6DC55D0526C130D0009FA6D6 /* point-cloud-study.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "point-cloud-study.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6DC55D0826C130D0009FA6D6 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6DC55D0A26C130D0009FA6D6 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -102,6 +106,8 @@
 				6DC55D0826C130D0009FA6D6 /* AppDelegate.swift */,
 				6DC55D0A26C130D0009FA6D6 /* SceneDelegate.swift */,
 				6DC55D0C26C130D0009FA6D6 /* ViewController.swift */,
+				6DAFF24326C7F9D900E3B6CA /* PointCloudMetalView.swift */,
+				6DA66F4826CB4DF200805335 /* Utils.swift */,
 				6DC55D0E26C130D0009FA6D6 /* Main.storyboard */,
 				6DC55D1126C130D2009FA6D6 /* Assets.xcassets */,
 				6DC55D1326C130D2009FA6D6 /* LaunchScreen.storyboard */,
@@ -258,9 +264,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6DA66F4926CB4DF200805335 /* Utils.swift in Sources */,
 				6DC55D0D26C130D0009FA6D6 /* ViewController.swift in Sources */,
 				6DC55D0926C130D0009FA6D6 /* AppDelegate.swift in Sources */,
 				6DC55D0B26C130D0009FA6D6 /* SceneDelegate.swift in Sources */,
+				6DAFF24426C7F9D900E3B6CA /* PointCloudMetalView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
