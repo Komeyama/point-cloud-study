@@ -9,9 +9,10 @@ import UIKit
 import AVFoundation
 
 class ViewController: UIViewController {
-    
-    @IBOutlet var imageView: UIImageView!
+
+    @IBOutlet var cloudView: PointCloudMetalView!
     private var avSession: AVCaptureSession = AVCaptureSession()
+    private let videoDataOutput = AVCaptureVideoDataOutput()
     private var depthOutput: AVCaptureDepthDataOutput = AVCaptureDepthDataOutput()
     private var outputSynchronizer: AVCaptureDataOutputSynchronizer?
     private var captureQueue: DispatchQueue = DispatchQueue(label: "captureQueue")
@@ -24,10 +25,12 @@ class ViewController: UIViewController {
 
     private func setUpVideo() {
         setUpVideoInput()
-        setUpDepthOutput()
+        setUpVideoAndDepthOutput()
+        
+        avSession.sessionPreset = .vga640x480
         avSession.startRunning()
     }
-    
+
     private func setUpVideoInput() {
         let devices = AVCaptureDevice.DiscoverySession(
             deviceTypes: [.builtInTrueDepthCamera],
@@ -39,35 +42,38 @@ class ViewController: UIViewController {
             avSession.addInput(videoInput)
         }
     }
-        
-    private func setUpDepthOutput() {
+
+    private func setUpVideoAndDepthOutput() {
+        if avSession.canAddOutput(videoDataOutput) {
+            avSession.addOutput(videoDataOutput)
+            videoDataOutput.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32BGRA)]
+        }
+
         depthOutput.isFilteringEnabled = true
         if avSession.canAddOutput(depthOutput) {
             avSession.addOutput(depthOutput)
+            depthOutput.isFilteringEnabled = false
         }
-        outputSynchronizer = AVCaptureDataOutputSynchronizer(dataOutputs: [depthOutput])
+                
+        outputSynchronizer = AVCaptureDataOutputSynchronizer(dataOutputs: [videoDataOutput, depthOutput])
         outputSynchronizer!.setDelegate(self, queue: captureQueue)
     }
 }
 
 extension ViewController: AVCaptureDataOutputSynchronizerDelegate {
     func dataOutputSynchronizer(_ synchronizer: AVCaptureDataOutputSynchronizer, didOutput synchronizedDataCollection: AVCaptureSynchronizedDataCollection) {
-        guard let syncedDepthData = synchronizedDataCollection.synchronizedData(for: depthOutput) as? AVCaptureSynchronizedDepthData else {
+
+        guard let syncedDepthData = synchronizedDataCollection.synchronizedData(for: depthOutput) as? AVCaptureSynchronizedDepthData,
+              let syncedVideoData: AVCaptureSynchronizedSampleBufferData = synchronizedDataCollection.synchronizedData(for: videoDataOutput) as? AVCaptureSynchronizedSampleBufferData else {
             return
         }
 
-        let depthData = syncedDepthData.depthData.converting(toDepthDataType: kCVPixelFormatType_DepthFloat32)
-        let depthDataMap = depthData.depthDataMap
-       
-        let ciImage = CIImage(cvPixelBuffer: depthDataMap).oriented(.leftMirrored)
-        let uiImage = UIImage(ciImage: ciImage, scale: 1.0, orientation: .leftMirrored)
-        
-        upDateImageView(uiImage)
-    }
-    
-    private func upDateImageView(_ image: UIImage) {
-        DispatchQueue.main.async {
-            self.imageView.image = image
+        let depthData = syncedDepthData.depthData
+        let sampleBuffer = syncedVideoData.sampleBuffer
+        guard let videoPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+                return
         }
+        cloudView.update(depthData, withTexture: videoPixelBuffer)
     }
+
 }
