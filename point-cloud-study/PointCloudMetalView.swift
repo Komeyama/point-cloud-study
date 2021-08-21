@@ -104,6 +104,31 @@ class PointCloudMetalView: MTKView {
         
         commandBuffer.commit()
     }
+    
+    func yawAroundCenter(_ angle: Float) {
+        syncQueue.sync {
+            let rotMat = Utils.rotate(angle: angle, r: self.up)
+
+            self.eye -= self.middle
+            self.eye = matrix4_mul_vector3(m: rotMat, v: self.eye)
+            self.eye += self.middle
+
+            self.up = matrix4_mul_vector3(m: rotMat, v: self.up)
+        }
+    }
+    
+    func pitchAroundCenter(_ angle: Float) {
+        syncQueue.sync {
+            let viewDirection = simd_normalize(self.middle - self.eye)
+            let rightVector = simd_cross(self.up, viewDirection)
+            let rotMat = Utils.rotate(angle: angle, r: rightVector)
+            
+            self.eye -= self.middle;
+            self.eye = matrix4_mul_vector3(m: rotMat, v: self.eye)
+            self.eye += self.middle;
+            self.up = matrix4_mul_vector3(m: rotMat, v: self.up);
+        }
+    }
 
     private func setUp() {
         configureMetal()
@@ -149,5 +174,11 @@ class PointCloudMetalView: MTKView {
         let appleViewMat: simd_float4x4 = Utils.lookAt(eye: eye, middle: middle, up: up)
         
         return appleProjMat * appleViewMat
+    }
+    
+    private func matrix4_mul_vector3(m: simd_float4x4, v: SIMD3<Float>) -> SIMD3<Float> {
+        var temp: SIMD4<Float> = [v.x, v.y, v.z, 0.0]
+        temp = simd_mul(m, temp)
+        return [temp.x, temp.y, temp.z]
     }
 }
