@@ -65,7 +65,7 @@ class Utils {
         let Q: simd_float4 = simd_float4([
             w.x * u.y - v.z,
             w.y * u.y + c,
-            w.y * u.z + c,
+            w.y * u.z + v.x,
             0.0
         ])
         let R: simd_float4 = simd_float4([
