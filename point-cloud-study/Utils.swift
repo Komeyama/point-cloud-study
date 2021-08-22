@@ -9,6 +9,8 @@ import Foundation
 import MetalKit
 
 class Utils {
+    
+    var initFarValue: Float = 1000
         
     static func toRadians(degree: Float) -> Float {
         return (1.0 / 180.0) * .pi * degree

@@ -18,14 +18,16 @@ class ViewController: UIViewController {
     private var captureQueue: DispatchQueue = DispatchQueue(label: "captureQueue")
     private var defaultVideoDevice: AVCaptureDevice?
     
-    private var lastXY = CGPoint(x: 0, y: 0)
-    private var lastScale = Float(1.0)
-    private var lastZoom = Float(0.0)
+    private var lastXY: CGPoint = CGPoint(x: 0, y: 0)
+    private var lastScale: Float = 1.0
+    private var lastZoom: Float = 0.0
+    private var initFarValue: Float = Utils().initFarValue
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setUpVideo()
         setUpGesture()
+        setUpUIComponents()
     }
 
     @IBAction private func handlePanOneFinger(gesture: UIPanGestureRecognizer) {
@@ -42,6 +44,26 @@ class ViewController: UIViewController {
             cloudView.pitchAroundCenter(Float((pnt.y - lastXY.y) * 0.1))
             lastXY = pnt
         }
+    }
+    
+    @objc func onChangeSliderValue(_ sender: UISlider) {
+        cloudView.currentFarValue = sender.value
+    }
+    
+    private func setUpUIComponents() {
+        let width = view.frame.width
+        let height = view.frame.height
+        setUpUISlider(viewWidth: width, viewHeight: height)
+    }
+    
+    private func setUpUISlider(viewWidth: CGFloat, viewHeight: CGFloat) {
+        let slider = UISlider()
+        slider.minimumValue = 100
+        slider.maximumValue = 30000
+        slider.value = initFarValue
+        slider.frame = CGRect(x: viewWidth * 0.1, y: viewHeight * 0.8, width: viewWidth * 0.8, height: viewHeight * 0.1)
+        slider.addTarget(self, action: #selector(onChangeSliderValue(_:)), for: .valueChanged)
+        view.addSubview(slider)
     }
 
     private func setUpVideo() {

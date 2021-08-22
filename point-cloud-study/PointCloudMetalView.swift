@@ -21,6 +21,7 @@ class PointCloudMetalView: MTKView {
     var commandQueue: MTLCommandQueue!
     var renderPipelineState: MTLRenderPipelineState!
     var depthStencilState: MTLDepthStencilState!
+    var currentFarValue: Float = Utils().initFarValue
     
     required init(coder: NSCoder) {
         super.init(coder: coder)
@@ -170,7 +171,7 @@ class PointCloudMetalView: MTKView {
     private func getFinalViewMatrix() -> simd_float4x4 {
         let aspect: Float = Float(drawableSize.width / drawableSize.height)
         
-        let appleProjMat: simd_float4x4 = Utils.perspectiveProjectionConversion(fovy: 70, aspect: aspect, near: 0.01, far: 30000)
+        let appleProjMat: simd_float4x4 = Utils.perspectiveProjectionConversion(fovy: 70, aspect: aspect, near: 0.01, far: currentFarValue)
         let appleViewMat: simd_float4x4 = Utils.lookAt(eye: eye, middle: middle, up: up)
         
         return appleProjMat * appleViewMat
