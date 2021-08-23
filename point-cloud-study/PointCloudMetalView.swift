@@ -80,7 +80,7 @@ class PointCloudMetalView: MTKView {
             let depthTextureDescriptor = MTLTextureDescriptor()
             depthTextureDescriptor.width = Int(drawableSize.width)
             depthTextureDescriptor.height = Int(drawableSize.height)
-            depthTextureDescriptor.pixelFormat = .depth32Float
+            depthTextureDescriptor.pixelFormat = self.depthStencilPixelFormat
             depthTextureDescriptor.usage = MTLTextureUsage(rawValue: MTLTextureUsage.renderTarget.rawValue | MTLTextureUsage.shaderRead.rawValue)
             
             let depthTestTexture = device?.makeTexture(descriptor: depthTextureDescriptor)
@@ -157,7 +157,7 @@ class PointCloudMetalView: MTKView {
         renderPipelineDescriptor.vertexFunction = vertexFunction
         renderPipelineDescriptor.fragmentFunction = fragmentFunction
         renderPipelineDescriptor.colorAttachments[0].pixelFormat = .bgra8Unorm
-        renderPipelineDescriptor.depthAttachmentPixelFormat = .depth32Float
+        renderPipelineDescriptor.depthAttachmentPixelFormat = self.depthStencilPixelFormat
         renderPipelineState = try! device!.makeRenderPipelineState(descriptor: renderPipelineDescriptor)
         
         let depthPipelineDescriptor = MTLDepthStencilDescriptor()
